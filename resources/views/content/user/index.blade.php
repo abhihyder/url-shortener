@@ -485,11 +485,6 @@
         });
     });
 
-    $(document).on("click", ".delete_this_file", function() {
-        let encrypted_id = $(this).data('id');
-        deleteFile(encrypted_id);
-    });
-
     function changeStatus(id, status) {
         let url = "{{route('admin.user.change-status')}}";
         bulkChanges(id, status, url)
@@ -545,43 +540,5 @@
         });
     });
 
-    function deleteFile(encrypted_id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-outline-danger ml-1'
-            },
-            buttonsStyling: false
-        }).then(function(result) {
-            if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "{{route('admin.file.delete')}}",
-                    data: {
-                        file_id: encrypted_id,
-                        _token: "{{ csrf_token()}}"
-                    },
-                    success: function(response) {
-                        $('#user_list_datatables').DataTable().ajax.reload(null, false);
-                    },
-                    error: function(reject) {
-                        let errors = $.parseJSON(reject.responseText);
-                        if (reject.status === 422 || reject.status === 403) {
-
-                            $.each(errors.error.message, function(key, val) {
-                                $("small#" + key + "-error").text(val[0]);
-                            });
-                        } else {}
-                    }
-                });
-            }
-        });
-    }
 </script>
 @endpush

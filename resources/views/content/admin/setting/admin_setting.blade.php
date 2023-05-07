@@ -29,6 +29,8 @@
                                 <input type="hidden" name="keys[]" value="payment_per_visit">
                                 <input type="hidden" name="keys[]" value="referral_percentage">
                                 <input type="hidden" name="keys[]" value="visitor_time_limit">
+                                <input type="hidden" name="keys[]" value="mail_notification">
+                                <input type="hidden" name="keys[]" value="queue_work">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
@@ -76,7 +78,24 @@
                                             <input type="number" class="form-control" placeholder="Limit in minutes" name="visitor_time_limit" value="{{getAdminSetting('visitor_time_limit')??720}}" />
                                         </div>
                                     </div>
-
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Mail Notification</label>
+                                            <select class="select2 form-control" name="mail_notification">
+                                                <option value="0" {{getAdminSetting('mail_notification') == 0 ? 'selected':''}}>No</option>
+                                                <option value="1" {{getAdminSetting('mail_notification') == 1 ? 'selected':''}}>Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Queue Work</label>
+                                            <select class="select2 form-control" name="queue_work">
+                                                <option value="0" {{getAdminSetting('queue_work') == 0 ? 'selected':''}}>No</option>
+                                                <option value="1" {{getAdminSetting('queue_work') == 1 ? 'selected':''}}>Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-12">
                                         <button type="button" onclick="submitSetting()" class="btn btn-primary mr-1">Submit</button>
                                     </div>

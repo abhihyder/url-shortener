@@ -237,7 +237,7 @@ class UserController extends Controller
             DB::commit();
 
             // Send mail-----------------
-            if ($user->email && Config::get('custom_config.mail_notification') && ($current_status != $request->status || $current_earning_status != $request->earning_disable)) {
+            if ($user->email && getAdminSetting('mail_notification') && ($current_status != $request->status || $current_earning_status != $request->earning_disable)) {
                 $array['view'] = 'content.emails.change_status';
                 $array['subject'] = "Status Changed";
                 $array['name'] = $user->name ?? $user->username;
@@ -262,7 +262,7 @@ class UserController extends Controller
 
                 $array['content'] = $content;
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     StatusChangeMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {
@@ -325,7 +325,7 @@ class UserController extends Controller
             $user->save();
 
             // Send mail-----------------
-            if ($user->email && Config::get('custom_config.mail_notification')) {
+            if ($user->email && getAdminSetting('mail_notification')) {
                 $array['view'] = 'content.emails.change_status';
                 $array['subject'] = "Status Changed";
                 $array['name'] = $user->name ?? $user->username;
@@ -338,7 +338,7 @@ class UserController extends Controller
 
                 $array['content'] = $content;
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     StatusChangeMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {
@@ -367,7 +367,7 @@ class UserController extends Controller
             User::whereIn('id', $request->user_id)->update(['status' => $request->status]);
 
             // Send mail-----------------
-            if (Config::get('custom_config.mail_notification')) {
+            if (getAdminSetting('mail_notification')) {
                 $users = User::whereIn('id', $request->user_id)->get();
                 $array['view'] = 'content.emails.change_status';
                 $array['name'] = null;
@@ -381,7 +381,7 @@ class UserController extends Controller
 
                 $array['content'] = $content;
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     BulkStatusChangeMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {
@@ -418,7 +418,7 @@ class UserController extends Controller
             $user->save();
 
             // Send mail-----------------
-            if ($user->email && Config::get('custom_config.mail_notification')) {
+            if ($user->email && getAdminSetting('mail_notification')) {
                 $array['view'] = 'content.emails.change_status';
                 $array['subject'] = "Status Changed";
                 $array['name'] = $user->name ?? $user->username;
@@ -431,7 +431,7 @@ class UserController extends Controller
 
                 $array['content'] = $content;
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     StatusChangeMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {
@@ -460,7 +460,7 @@ class UserController extends Controller
             User::whereIn('id', $request->user_id)->update(['earning_disable' => $request->status]);
 
             // Send mail-----------------
-            if (Config::get('custom_config.mail_notification')) {
+            if (getAdminSetting('mail_notification')) {
                 $users = User::whereIn('id', $request->user_id)->get();
                 $array['view'] = 'content.emails.change_status';
                 $array['name'] = null;
@@ -474,7 +474,7 @@ class UserController extends Controller
 
                 $array['content'] = $content;
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     BulkStatusChangeMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {

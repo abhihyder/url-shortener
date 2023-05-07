@@ -21,14 +21,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -47,14 +40,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->status([1])->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -66,14 +52,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->status([3])->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -85,14 +64,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->status([2])->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -104,14 +76,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->status([0])->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -131,14 +96,7 @@ class AdminWithdrawalRequestController extends Controller
     {
         if ($request->ajax()) {
             $withdrawal_request = WithdrawalRequest::query()->with('user', 'withdrawalMethod');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $withdrawal_request->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $withdrawal_request = createdBetween($withdrawal_request, $request);
             $withdrawal_request->status([4])->orderBy('id', 'desc');
             return $this->datatable($withdrawal_request);
         }
@@ -235,7 +193,7 @@ class AdminWithdrawalRequestController extends Controller
             ];
             Cache::put('withdrawal_request', $data);
 
-            if ($withdrawal_request->user->email && Config::get('custom_config.mail_notification') && ($current_status == 0 || $current_status == 1)) {
+            if ($withdrawal_request->user->email && getAdminSetting('mail_notification') && ($current_status == 0 || $current_status == 1)) {
                 $array['view'] = 'content.emails.notification';
                 $array['subject'] = "Withdraw Request";
                 $array['name'] = $withdrawal_request->user->name ?? $withdrawal_request->user->username;
@@ -244,7 +202,7 @@ class AdminWithdrawalRequestController extends Controller
                 $array['timezone'] = config('app.timezone');
                 $array['content'] = "";
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     ProcessMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {

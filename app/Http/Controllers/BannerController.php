@@ -21,9 +21,7 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $banners = Banner::query()->with('user')->where(['user_id' => Auth::user()->id]);
-
-            $banners->orderBy('id', 'desc');
+            $banners = Banner::query()->with('user')->where(['user_id' => Auth::user()->id])->orderBy('id', 'desc');
 
             return DataTables::of($banners)
                 ->addIndexColumn()

@@ -14,7 +14,7 @@ class SendMail
     public static function welcomeMail(object $user)
     {
         // Send mail-----------------
-        if ($user->email && Config::get('custom_config.mail_notification')) {
+        if ($user->email && getAdminSetting('mail_notification')) {
             $array['view'] = 'content.emails.welcome_mail';
             $array['subject'] = "Welcome to " . config('app.name');
             $array['name'] = $user->name ?? $user->username;
@@ -25,7 +25,7 @@ class SendMail
 
             $array['content'] = $content;
 
-            if (Config::get('custom_config.queue_work')) {
+            if (getAdminSetting('queue_work')) {
                 ProcessMail::dispatch($array)
                     ->delay(now()->addSeconds(5));
             } else {

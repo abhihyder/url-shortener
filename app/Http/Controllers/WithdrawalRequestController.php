@@ -132,7 +132,7 @@ class WithdrawalRequestController extends Controller
             ];
             Cache::put('withdrawal_request', $data);
 
-            if ($auth->email && Config::get('custom_config.mail_notification')) {
+            if ($auth->email && getAdminSetting('mail_notification')) {
                 $array['view'] = 'content.emails.notification';
                 $array['subject'] = "Withdraw Request";
                 $array['name'] = $auth->name ?? $auth->username;
@@ -141,7 +141,7 @@ class WithdrawalRequestController extends Controller
                 $array['timezone'] = config('app.timezone');
                 $array['content'] = "";
 
-                if (Config::get('custom_config.queue_work')) {
+                if (getAdminSetting('queue_work')) {
                     ProcessMail::dispatch($array)
                         ->delay(now()->addSeconds(5));
                 } else {

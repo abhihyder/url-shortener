@@ -39,6 +39,22 @@ if (!function_exists('getAdminSetting')) {
     }
 }
 
+if (!function_exists('createdBetween')) {
+
+    function createdBetween($model, $request)
+    {
+        if ($request->date_range) {
+            $date = explode(' ', $request->date_range);
+            if (count($date) == 1) {
+                $model->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
+            } else {
+                $model->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
+            }
+        }
+        return $model;
+    }
+}
+
 if (!function_exists('percentageCalculate')) {
 
     function percentageCalculate($partialValue, $totalValue)

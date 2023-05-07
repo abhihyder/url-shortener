@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 368 368" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .icon-text {
+            font: bold 80px sans-serif;
+        }
+
+        .icon-text.realdrum {
+            font: bold 42px sans-serif;
+        }
+    </style>
+    <path d="M92 0C79.35 0 69 10.35 69 23V345C69 357.65 79.35 368 92 368H322C334.65 368 345 357.65 345 345V92L253 0H92Z" fill="#E2E5E7"></path>
+    <path d="M276 92H345L253 0V69C253 81.65 263.35 92 276 92Z" fill="#B0B7BD"></path>
+    <path d="M345 161L276 92H345V161Z" fill="#CAD1D8"></path>
+    <path d="M299 321C299 327.325 293.825 332.5 287.5 332.5H34.5C28.175 332.5 23 327.325 23 321V206C23 199.675 28.175 194.5 34.5 194.5H287.5C293.825 194.5 299 199.675 299 206V321Z" fill="#2f80ed"></path>
+    <path d="M287.5 332.5H69V344H287.5C293.825 344 299 338.825 299 332.5V321C299 327.325 293.825 332.5 287.5 332.5Z" fill="#CAD1D8"></path>
+    <text x="160" y="268" fill="white" class="icon-text jpg" text-anchor="middle" dominant-baseline="middle">JPG</text>
+</svg>

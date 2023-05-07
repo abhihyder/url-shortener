@@ -1,0 +1,64 @@
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #7367f0;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #fd8d27;
+}
+
+.upload-button {
+    background: #7367f0;
+    color: #fff !important;
+    font-weight: 400;
+    border-radius: 4px;
+}
+
+.custom-font-size .feather {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+}
+
+.folder-container:hover .folder-options {
+    opacity: 1 !important;
+}
+
+.file-container:hover .file-options {
+    opacity: 1 !important;
+}
+
+.list-group-item-action.active > button {
+    color: #fff !important;
+}
+
+.main-menu .navbar-header .navbar-brand {
+    margin-top: 5px;
+}
+
+.customBtnGroup > .dropdown-toggle::after {
+    display: none !important;
+}
+
+.customBtnGroup > .dropdown-menu a {
+    text-transform: capitalize;
+}
+
+.select2-container--classic .select2-selection--single .select2-selection__arrow b, .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    padding-right: 0 !important;
+    margin-left: -10px;
+    margin-top: 3px;
+}

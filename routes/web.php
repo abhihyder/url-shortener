@@ -34,8 +34,10 @@ Route::get('/terms-and-condition', [LandingPageController::class, 'termsAndCondi
 Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'userIndex'])->name('user.dashboard');
     Route::post('dashboard-data', [DashboardController::class, 'getData'])->name('user.dashboard-data');
+    Route::post('dashboard-data', [DashboardController::class, 'getData'])->name('user.dashboard-data');
+    Route::post('statistics-data', [DashboardController::class, 'getStatistics'])->name('user.statistics-data');
     Route::get('shorten-url', [ShortenUrlController::class, 'index'])->name('shorten-url.index');
     Route::get('shorten-url/{id}', [ShortenUrlController::class, 'show'])->name('shorten-url.show');
     Route::post('shorten-url', [ShortenUrlController::class, 'store'])->name('shorten-url.store');

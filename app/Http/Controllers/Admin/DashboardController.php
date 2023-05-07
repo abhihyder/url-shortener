@@ -19,10 +19,17 @@ class DashboardController extends Controller
         return view('content.admin.dashboard');
     }
 
+    public function userIndex()
+    {
+        return view('content.dashboard.dashboard');
+    }
+
     public function getData(Request $request)
     {
 
-        $visitors = Visitor::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])
+        $visitors = Visitor::when($request->user, function ($query) {
+            $query->myVisitor();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])
             ->select(
                 DB::raw("(count(id)) as total_visitor"),
                 DB::raw("(sum(is_unique)) as total_unique"),
@@ -30,11 +37,19 @@ class DashboardController extends Controller
             )
             ->get();
 
-        $referral_earnings = ReferralEarning::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->sum('amount');
+        $referral_earnings = ReferralEarning::when($request->user, function ($query) {
+            $query->myReferrer();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->sum('amount');
 
-        $processing = WithdrawalRequest::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([0, 1])->sum('request_amount');
-        $complete = WithdrawalRequest::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([2])->sum('request_amount');
-        $process_failed = WithdrawalRequest::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([3, 4])->sum('request_amount');
+        $processing = WithdrawalRequest::when($request->user, function ($query) {
+            $query->myRequest();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([0, 1])->sum('request_amount');
+        $complete = WithdrawalRequest::when($request->user, function ($query) {
+            $query->myRequest();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([2])->sum('request_amount');
+        $process_failed = WithdrawalRequest::when($request->user, function ($query) {
+            $query->myRequest();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])->status([3, 4])->sum('request_amount');
 
         $data = [
             'visitors' => $visitors,
@@ -60,7 +75,9 @@ class DashboardController extends Controller
             $days[] = $value->format('d M Y');
         }
 
-        $visitors = Visitor::whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])
+        $visitors = Visitor::when($request->user, function ($query) {
+            $query->myVisitor();
+        })->whereBetween('created_at', [date('Y-m-1 00:00:00'), date('Y-m-d 23:59:59')])
             ->select(
                 DB::raw("(date(`created_at`)) as created_date"),
                 DB::raw("(count(id)) as total_visitor"),

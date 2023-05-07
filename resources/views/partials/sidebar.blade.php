@@ -21,6 +21,8 @@
             </li>
             @endif
             @endif
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('user.dashboard')}}"><i data-feather='home'></i><span class="menu-title text-truncate" data-i18n="Mail">{{$auth->role_id == 1?'My':''}} Dashboard</span></a>
+            </li>
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('shorten-url.index') }}"><i data-feather='link'></i><span class="menu-title text-truncate" data-i18n="Email">Shorten URL</span></a>
             </li>
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('user.statistics')}}"><i data-feather='trending-up'></i><span class="menu-title text-truncate" data-i18n="Chat">{{$auth->role_id == 1?'My':''}} Statistics</span></a>

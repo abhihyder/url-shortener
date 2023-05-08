@@ -10,7 +10,7 @@ interface BaseInterface
 
     public function find(int $id);
 
-    public function update(array $request);
+    public function update(array $request, int $id);
 
     public function destroy(int $id);
 }

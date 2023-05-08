@@ -4,11 +4,11 @@ namespace App\Repositories\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class DashboardFacade extends Facade
+class StatisticsFacade extends Facade
 {
 
     protected static function getFacadeAccessor()
     {
-        return 'dashboard-facade-service';
+        return 'statistics-facade-service';
     }
 }

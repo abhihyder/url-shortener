@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Repositories\Services\DashboardFacadeService;
 use App\Repositories\Services\DirectoryFacadeService;
 use App\Repositories\Services\ShortenUrlFacadeService;
+use App\Repositories\Services\StatisticsFacadeService;
 use App\Repositories\Services\VisitorFacadeService;
+use App\Repositories\Services\WithdrawalRequestFacadeService;
 use Illuminate\Support\ServiceProvider;
 
 class FacadeServiceProvider extends ServiceProvider
@@ -31,6 +33,14 @@ class FacadeServiceProvider extends ServiceProvider
 
         $this->app->bind('visitor-facade-service', function () {
             return new VisitorFacadeService();
+        });
+
+        $this->app->bind('statistics-facade-service', function () {
+            return new StatisticsFacadeService();
+        });
+
+        $this->app->bind('withdrawal-request-facade-service', function () {
+            return new WithdrawalRequestFacadeService();
         });
 
         // Register more  facade services.

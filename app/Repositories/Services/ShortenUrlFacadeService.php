@@ -104,11 +104,6 @@ class ShortenUrlFacadeService implements ShortenUrlInterface
         return JsonResponse::success('URL shortening updated successfully!');
     }
 
-    public function destroy(int $id)
-    {
-        // TODO:
-    }
-
     private function getQuery()
     {
         return ShortenUrl::query()->with('user:id,name,email', 'visitors:id,shorten_url_id')->where('user_id', Auth::id())->orderBy('id', 'desc');

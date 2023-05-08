@@ -292,13 +292,13 @@
                 user:"{{$user}}",
             },
             success: function(response) {
-                let total_visitor = response.success.data.visitors[0].total_visitor ?? 0;
-                let total_payment = response.success.data.visitors[0].total_payment ?? 0;
-                let total_unique = response.success.data.visitors[0].total_unique ?? 0;
-                let total_refferals = response.success.data.referral_earnings;
-                let complete = response.success.data.complete;
-                let processing = response.success.data.processing;
-                let process_failed = response.success.data.process_failed;
+                let total_visitor = response.data.visitors[0].total_visitor ?? 0;
+                let total_payment = response.data.visitors[0].total_payment ?? 0;
+                let total_unique = response.data.visitors[0].total_unique ?? 0;
+                let total_refferals = response.data.referral_earnings;
+                let complete = response.data.complete;
+                let processing = response.data.processing;
+                let process_failed = response.data.process_failed;
 
                 $("#total_visitor_value").text(digitFormat(total_visitor));
                 $("#unique_download_value").text(digitFormat(total_unique));
@@ -362,8 +362,8 @@
                 user:"{{$user}}",
             },
             success: function(response) {
-                let visitors = response.success.data.visitors;
-                let days = response.success.data.days;
+                let visitors = response.data.visitors;
+                let days = response.data.days;
                 generateStatisticsTableBody(days, visitors);
             },
             error: function(reject) {

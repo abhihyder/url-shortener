@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface DashboardInterface extends BaseInterface
+interface DashboardInterface
 {
     // Define your methods here
 }

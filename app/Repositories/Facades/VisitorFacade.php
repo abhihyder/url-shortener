@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 class VisitorFacade extends Facade
 {
 
-    public static function getFacadeAccessor()
+    protected static function getFacadeAccessor()
     {
         return 'visitor-facade-service';
     }

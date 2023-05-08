@@ -21,7 +21,7 @@ class DashboardFacadeService implements DashboardInterface
         // TODO:
     }
 
-    public function update(array $request, int $id)
+    public function update(array $request)
     {
         // TODO:
     }

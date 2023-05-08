@@ -4,11 +4,11 @@ namespace App\Repositories\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class DashboardFacade extends Facade
+class WithdrawalRequestFacade extends Facade
 {
 
     protected static function getFacadeAccessor()
     {
-        return 'dashboard-facade-service';
+        return 'withdrawal-request-facade-service';
     }
 }

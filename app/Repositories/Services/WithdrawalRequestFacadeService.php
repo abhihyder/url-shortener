@@ -2,8 +2,17 @@
 
 namespace App\Repositories\Services;
 
+use App\Jobs\ProcessMail;
+use App\Mail\NotificationMail;
 use App\Models\WithdrawalRequest;
 use App\Repositories\Interfaces\WithdrawalRequestInterface;
+use Hyder\JsonResponse\Facades\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class WithdrawalRequestFacadeService implements WithdrawalRequestInterface
@@ -24,6 +33,35 @@ class WithdrawalRequestFacadeService implements WithdrawalRequestInterface
             })
             ->orderBy('id', 'desc');
         return $this->datatable($withdrawal_request);
+    }
+
+    public function update(array $request)
+    {
+        try {
+
+            $validator = $this->validation($request);
+
+            if ($validator->fails()) {
+                return JsonResponse::invalidRequest($validator->errors());
+            }
+
+            DB::beginTransaction();
+            $withdrawal_request = WithdrawalRequest::findOrFail($request['withdraw_request_id']);
+            $current_status = $withdrawal_request->status;
+
+            $this->updateWithdrawalAndWallet($withdrawal_request, $request, $current_status);
+
+            DB::commit();
+
+            $this->updateCache();
+
+            $this->notifiyUser($withdrawal_request, $current_status);
+
+            return JsonResponse::success('Withdrawal request updated successfully!', $withdrawal_request);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return JsonResponse::internalError($ex->getMessage());
+        }
     }
 
     public function sum(array $request, array $status, bool $between = false): int
@@ -87,5 +125,121 @@ class WithdrawalRequestFacadeService implements WithdrawalRequestInterface
             })
             ->rawColumns(['status', 'action'])
             ->make(true);
+    }
+
+    private function updateWithdrawalAndWallet($withdrawal_request, $request, $current_status)
+    {
+        $auth = Auth::user();
+
+        if ($current_status == 0 && ($request['status'] == 1 || $request['status'] == 3 || $request['status'] == 4)) {
+
+            if ($request['status'] == 3 || $request['status'] == 4) {
+                $withdrawal_request->user->wallet->increment('available_balance', $withdrawal_request->request_amount);
+            }
+
+            $withdrawal_request->updated_by = $auth->id;
+            $withdrawal_request->status = $request['status'];
+            if ($request['note']) {
+                $withdrawal_request->note = $request['note'];
+            }
+            if (isset($request['transection_id']) && $request['transection_id']) {
+                $withdrawal_request->transection_id = $request['transection_id'];
+            }
+            $withdrawal_request->save();
+        } else if ($current_status == 1 && ($request['status'] == 2 || $request['status'] == 3 || $request['status'] == 4)) {
+
+            if ($request['status'] == 2) {
+                $withdrawal_request->user->wallet->increment('total_withdraw', $withdrawal_request->request_amount);
+                $withdrawal_request->complete_date = date('Y-m-d H:i:s');
+            } else if ($request['status'] == 3 || $request['status'] == 4) {
+                $withdrawal_request->user->wallet->increment('available_balance', $withdrawal_request->request_amount);
+            }
+
+            $withdrawal_request->updated_by = $auth->id;
+            $withdrawal_request->status = $request['status'];
+            if ($request['note']) {
+                $withdrawal_request->note = $request['note'];
+            }
+            if (isset($request['transection_id']) && $request['transection_id']) {
+                $withdrawal_request->transection_id = $request['transection_id'];
+            }
+            $withdrawal_request->save();
+        }
+
+        return true;
+    }
+
+    private function updateCache()
+    {
+        $pending_request = WithdrawalRequest::status([0])->count();
+        $approved_request = WithdrawalRequest::status([1])->count();
+
+        $pending_by_user = WithdrawalRequest::status([0])
+            ->select(
+                'user_id',
+                DB::raw("(count(id)) as total_pending"),
+            )
+            ->groupBy('user_id')
+            ->get();
+
+        $approved_by_user = WithdrawalRequest::status([1])
+            ->select(
+                'user_id',
+                DB::raw("(count(id)) as total_approved"),
+            )
+            ->groupBy('user_id')
+            ->get();
+
+        $pending_request_by_user = [];
+        $approved_request_by_user = [];
+        foreach ($pending_by_user as $pending) {
+            $pending_request_by_user[$pending->user_id] = $pending->total_pending;
+        }
+
+        foreach ($approved_by_user as $approved) {
+            $approved_request_by_user[$approved->user_id] = $approved->total_approved;
+        }
+
+        $data = [
+            'pending_request' => $pending_request,
+            'pending_request_by_user' => $pending_request_by_user,
+            'approved_request' => $approved_request,
+            'approved_request_by_user' => $approved_request_by_user,
+        ];
+
+        Cache::put('withdrawal_request', $data);
+
+        return true;
+    }
+
+    private function notifiyUser($withdrawal_request, $current_status)
+    {
+        if ($withdrawal_request->user->email && getAdminSetting('mail_notification') && ($current_status == 0 || $current_status == 1)) {
+            $array['view'] = 'content.emails.notification';
+            $array['subject'] = "Withdraw Request";
+            $array['name'] = $withdrawal_request->user->name ?? $withdrawal_request->user->username;
+            $array['to'] = $withdrawal_request->user->email;
+            $array['withdrawal_request'] = $withdrawal_request;
+            $array['timezone'] = config('app.timezone');
+            $array['content'] = "";
+
+            if (getAdminSetting('queue_work')) {
+                ProcessMail::dispatch($array)
+                    ->delay(now()->addSeconds(5));
+            } else {
+                Config::set('queue.default', 'sync');
+                Mail::to($array['to'])->queue(new NotificationMail($array));
+            }
+        }
+
+        return true;
+    }
+
+    private function validation(array $request)
+    {
+        return Validator::make($request, [
+            'withdraw_request_id' => 'required',
+            'status' => 'required',
+        ]);
     }
 }

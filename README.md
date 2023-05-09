@@ -1,14 +1,14 @@
-## About Project
+### About Project
 
 
-## Project Setup
+### Project Setup
 
 -   Clone the repository
 -   Run "composer install"
 -   Run "cp .env.example .env"
 -   Run "php artisan key:generate"
 
-<h4> Set some values in .env</h4>
+### Set some values in .env
 
 -   TIME_ZONE= (UTC, Asia/Dhaka, etc)
 
@@ -18,10 +18,13 @@
 
 -   QUEUE_CONNECTION=database
 
-<h4>After that run those following command</h4>
-
+#### After that run those following command:
+```shall
 php artisan migrate --seed
-
+```
+```shall
 php artisan serve
-
+```
+```shall
 php artisan queue:work
+```

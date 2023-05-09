@@ -76,11 +76,25 @@ class ShortenUrlFacadeService implements ShortenUrlInterface
             }
 
             $urlCode = Str::random(8);
-            $qrCodePath = $this->createQrCode(url($urlCode));
+            $qrCodePath = $this->createQrCode(route('visitor.visit', $urlCode));
             ShortenUrl::create(array_merge($request, ['user_id' => Auth::id(), 'qr_code_path' => $qrCodePath, 'url_code' => $urlCode]));
             return JsonResponse::success('URL shortening done successfully!');
         } catch (\Exception $ex) {
             return JsonResponse::internalError($ex->getMessage());
+        }
+    }
+
+    public function seed(array $request)
+    {
+        try {
+            if (Config::get('app.env') == 'local') {
+                $urlCode = Str::random(8);
+                $qrCodePath = $this->createQrCode(route('visitor.visit', $urlCode));
+                return ShortenUrl::create(array_merge($request, ['qr_code_path' => $qrCodePath, 'url_code' => $urlCode]));
+            }
+            return false;
+        } catch (\Exception $ex) {
+            return false;
         }
     }
 
@@ -111,9 +125,9 @@ class ShortenUrlFacadeService implements ShortenUrlInterface
 
     private function createQrCode(string $qrCodeText)
     {
-        $format = Config::get('shortener.qr_code_format');
+        $format = getAdminSetting('qr_code_format') ?? 'svg';
 
-        $filePath = 'storage/qr/' . date('Y/m/d/Ymd_His.') . $format;
+        $filePath = 'storage/qr/' . Str::random(20) . '.' . $format;
 
         DirectoryFacade::make(public_path($filePath));
 

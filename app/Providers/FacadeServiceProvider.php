@@ -6,6 +6,7 @@ use App\Repositories\Services\BannerFacadeService;
 use App\Repositories\Services\DashboardFacadeService;
 use App\Repositories\Services\DirectoryFacadeService;
 use App\Repositories\Services\PaymentMethodFacadeService;
+use App\Repositories\Services\ProfileFacadeService;
 use App\Repositories\Services\ShortenUrlFacadeService;
 use App\Repositories\Services\StatisticsFacadeService;
 use App\Repositories\Services\VisitorFacadeService;
@@ -51,6 +52,10 @@ class FacadeServiceProvider extends ServiceProvider
 
         $this->app->bind('banner-facade-service', function () {
             return new BannerFacadeService();
+        });
+
+        $this->app->bind('profile-facade-service', function () {
+            return new ProfileFacadeService();
         });
 
         // Register more  facade services.

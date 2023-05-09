@@ -41,7 +41,7 @@ class BannerFacadeService implements BannerInterface
                 return JsonResponse::invalidRequest($validator->errors());
             }
 
-            $fileContent = $request['banner'];
+            $fileContent = $request['banner'] ?? null;
             $fileName = null;
             $filePath = null;
             $folder_structure = null;
@@ -76,7 +76,7 @@ class BannerFacadeService implements BannerInterface
             $banner->width  = $request['width'];
             $banner->height = $request['height'];
             $banner->save();
-            return JsonResponse::success('Payment Method updated successfully!');
+            return JsonResponse::success('Banner updated successfully!');
         } catch (\Exception $ex) {
             return JsonResponse::internalError($ex->getMessage());
         }

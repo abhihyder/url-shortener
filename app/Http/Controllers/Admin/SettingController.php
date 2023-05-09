@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use Hyder\JsonResponse\Facades\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class SettingController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->respondInvalidRequest($validator->errors());
+                return JsonResponse::invalidRequest($validator->errors());
             }
 
             foreach ($request->keys as $key) {
@@ -50,10 +51,9 @@ class SettingController extends Controller
             $configs =  Setting::get();
             Cache::put('admin_settings', $configs);
             
-            return $this->respondCreated('Admin setting updated successfully!');
+            return JsonResponse::success('Admin setting updated successfully!');
         } catch (\Exception $ex) {
-            DB::rollBack();
-            return $this->respondInternalError($ex->getMessage());
+            return JsonResponse::internalError($ex->getMessage());
         }
     }
 }

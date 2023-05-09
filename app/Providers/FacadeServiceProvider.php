@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\Services\BannerFacadeService;
 use App\Repositories\Services\DashboardFacadeService;
 use App\Repositories\Services\DirectoryFacadeService;
 use App\Repositories\Services\PaymentMethodFacadeService;
@@ -46,6 +47,10 @@ class FacadeServiceProvider extends ServiceProvider
 
         $this->app->bind('payment-method-facade-service', function () {
             return new PaymentMethodFacadeService();
+        });
+
+        $this->app->bind('banner-facade-service', function () {
+            return new BannerFacadeService();
         });
 
         // Register more  facade services.

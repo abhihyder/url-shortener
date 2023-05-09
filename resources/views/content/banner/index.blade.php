@@ -98,7 +98,7 @@
                                     <div class="media-body mt-75 ml-1">
                                         <label for="banner-upload" class="btn btn-sm btn-primary mb-75 mr-75">Upload</label>
                                         <input type="file" name="banner" id="banner-upload" hidden accept="image/*" />
-                                        <p>Allowed JPG, JPEG or PNG. Max size of 500KB</p>
+                                        <p>Allowed JPG, JPEG or PNG. Max size of 1000KB</p>
                                     </div>
                                 </div>
                                 <small id="banner-error" class="text-danger"></small>
@@ -224,7 +224,7 @@
                 let errors = $.parseJSON(reject.responseText);
                 if (reject.status === 422 || reject.status === 403) {
 
-                    $.each(errors.error.message, function(key, val) {
+                    $.each(errors.message, function(key, val) {
                         $("small#" + key + "-error").text(val[0]);
                     });
                 } else if (reject.status === 400) {

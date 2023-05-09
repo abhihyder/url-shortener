@@ -29,14 +29,7 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $users = User::query()->with('role');
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $users->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $users->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $users = createdBetween($users, $request);
             $users->orderBy('id', 'desc');
 
             return DataTables::of($users)

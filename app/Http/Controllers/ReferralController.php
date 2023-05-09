@@ -42,14 +42,7 @@ class ReferralController extends Controller
     {
         if ($request->ajax()) {
             $referral_earnings = ReferralEarning::query()->with('referred')->where(['referrer_id' => Auth::user()->id]);
-            if ($request->date_range) {
-                $date = explode(' ', $request->date_range);
-                if (count($date) == 1) {
-                    $referral_earnings->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[0] . date(' 23:59:59')]);
-                } else {
-                    $referral_earnings->whereBetween('created_at', [$date[0] . date(' 00:00:00'), $date[2] . date(' 23:59:59')]);
-                }
-            }
+            $referral_earnings = createdBetween($referral_earnings, $request);
             $referral_earnings->orderBy('id', 'desc');
 
             return DataTables::of($referral_earnings)

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\Services\DashboardFacadeService;
 use App\Repositories\Services\DirectoryFacadeService;
+use App\Repositories\Services\PaymentMethodFacadeService;
 use App\Repositories\Services\ShortenUrlFacadeService;
 use App\Repositories\Services\StatisticsFacadeService;
 use App\Repositories\Services\VisitorFacadeService;
@@ -41,6 +42,10 @@ class FacadeServiceProvider extends ServiceProvider
 
         $this->app->bind('withdrawal-request-facade-service', function () {
             return new WithdrawalRequestFacadeService();
+        });
+
+        $this->app->bind('payment-method-facade-service', function () {
+            return new PaymentMethodFacadeService();
         });
 
         // Register more  facade services.

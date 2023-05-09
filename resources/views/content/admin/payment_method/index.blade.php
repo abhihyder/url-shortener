@@ -151,7 +151,7 @@
                 let errors = $.parseJSON(reject.responseText);
                 if (reject.status === 422 || reject.status === 403) {
 
-                    $.each(errors.error.message, function(key, val) {
+                    $.each(errors.message, function(key, val) {
                         $("small#" + key + "-error").text(val[0]);
                     });
                 } else {}

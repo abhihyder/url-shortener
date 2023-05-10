@@ -137,10 +137,10 @@
                 _token: "{{ csrf_token()}}"
             },
             success: function(response) {
-                let visitors = response.success.data.visitors;
-                let days = response.success.data.days;
-                let wallet = response.success.data.wallet;
-                let processing_request = response.success.data.processing_request;
+                let visitors = response.data.visitors;
+                let days = response.data.days;
+                let wallet = response.data.wallet;
+                let processing_request = response.data.processing_request;
                 if (wallet) {
                     let earning = parseFloat(parseFloat(wallet.available_balance) + parseFloat(wallet.total_withdraw) + parseFloat(processing_request)).toFixed(4)
                     $("#current_balance").text(digitFormat(parseFloat(wallet.available_balance).toFixed(4)));

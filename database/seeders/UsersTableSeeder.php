@@ -31,19 +31,19 @@ class UsersTableSeeder extends Seeder
                 'role_id' => 1,
             ],
             [
-                'name' => 'Jonh Doe',
-                'username' => 'jonhdoe',
-                'email' => 'jonhdoe@url-shortener.com',
-                'password' => Hash::make('secret'),
-                'role_id' => 3,
-            ],
-            [
                 'name' => 'Moderator',
                 'username' => 'moderator',
                 'email' => 'moderator@url-shortener.com',
                 'password' => Hash::make('secret'),
+                'role_id' => 2,
+            ],
+            [
+                'name' => 'John Doe',
+                'username' => 'johndoe',
+                'email' => 'johndoe@url-shortener.com',
+                'password' => Hash::make('secret'),
                 'role_id' => 3,
-            ]
+            ],
         ]);
 
         Wallet::insert([

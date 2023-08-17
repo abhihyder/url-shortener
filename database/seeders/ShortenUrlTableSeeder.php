@@ -25,7 +25,7 @@ class ShortenUrlTableSeeder extends Seeder
                 [
                     'name' => $faker->name,
                     'url' => $faker->url,
-                    'access_code' => $faker->boolean ? Str::random(6) : '',
+                    'access_code' => $faker->boolean ? Str::random(6) : null,
                     'expire_date' => $faker->boolean ? date('Y-m-d H:i:s', strtotime('+ ' . rand(1, 5) . ' day')) : '',
                     'user_id' => rand(1, 3),
                     'status' => $faker->boolean

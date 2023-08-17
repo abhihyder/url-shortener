@@ -23,6 +23,10 @@ class VisitorFactory extends Factory
     public function definition()
     {
         $bool = $this->faker->boolean;
+        $firstDayOfMonth = now()->startOfMonth();
+        // Generate a fake date between the first day of the current month and now
+        $date = $this->faker->dateTimeBetween($firstDayOfMonth, 'now');
+
         return [
             'os' => $this->faker->randomElement(['Windows', 'Mac', 'Linux']),
             'ip' => $this->faker->ipv4,
@@ -30,6 +34,8 @@ class VisitorFactory extends Factory
             'payment' => $bool ? $this->faker->randomFloat(4, 0, 0.008) : 0.000,
             'is_unique' => $bool,
             'earning_disable' => false,
+            'created_at' => $date->format('Y-m-d H:i:s'),
+            'updated_at' => $date->format('Y-m-d H:i:s')
         ];
     }
 

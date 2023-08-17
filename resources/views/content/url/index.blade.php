@@ -87,7 +87,7 @@
 
                     <div class="form-group">
                         <label class="form-label" for="url">URL <span>*</span></label>
-                        <input class="form-control " type="text" name="url" placeholder="https://example.com/hello-world" aria-describedby="email" tabindex="2" />
+                        <input class="form-control " type="url" name="url" placeholder="https://example.com/hello-world" aria-describedby="email" tabindex="2" />
                         <small id="url-error" class="text-danger"></small>
                     </div>
                     <div class="form-group">

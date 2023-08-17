@@ -48,7 +48,7 @@ class PaymentMethodFacadeService implements PaymentMethodInterface
         try {
             return PaymentMethod::findOrFail($id);
         } catch (\Exception $ex) {
-            return throw new \Exception($ex->getMessage());
+            throw new \Exception($ex->getMessage());
         }
     }
 
